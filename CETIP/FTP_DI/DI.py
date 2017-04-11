@@ -24,7 +24,7 @@ def gettxt():
             for txt in txt_bs:
                 txt_str = txt.get_text()
             txt_lst = txt_str.split("\n")
-            txt_lst = txt_lst[::-1]
+            txt_lst.reverse()
             txt_lst.remove(txt_lst[0])
             txt_out = []
             for file in txt_lst:

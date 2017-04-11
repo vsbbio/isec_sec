@@ -15,8 +15,8 @@ def gettxt():
             txt_lst = txt_str.split("\n")
 
             #Invertando a ordem da lista    
-            txt_lst = txt_lst[::-1]
-
+            txt_lst.reverse()
+            
             #Removendo a primeira linha da lista
             txt_lst.remove(txt_lst[0])
             

@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 def get_IF():
     html = urlopen("https://www.cetip.com.br/tituloscri")
-    bsObj = BeautifulSoup(html,"html5lib")
+    bsObj = BeautifulSoup(html,"lxml")
     if_bs = bsObj.find_all("select", attrs={"class":"select-padrao", "id":"ctl00_MainContent_ddlCodigoIF"})
     
     for i in if_bs:
