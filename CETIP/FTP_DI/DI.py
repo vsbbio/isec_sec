@@ -140,7 +140,7 @@ if willp == 1:
                 di_df = pd.DataFrame(di_lst, columns=["Arquivo", "Data", "Taxa x 100"])
                 
                 #Salvando o arquivo em CSV
-                di_df.to_csv(pathFILE+"\\DI"+snowflake+".csv", sep=";",index=False, doublequote=False, decimal=",", mode="a")
+                di_df.to_csv(pathFILE+"\\DI"+snowflake+".csv", sep=";",index=False, doublequote=False, decimal=",")
                 print("\nArquivo salvo em %s, por favor verificar a correta alocação!" %(pathFILE))
                 break
             
@@ -179,7 +179,7 @@ elif willp == 2:
                     txt_lst = gettxt()
                     
                     #Abrindo e convertendo o arquivo DI.csv em Data Frame
-                    di_csv = pd.read_csv("DI.csv", header=0, sep=";", decimal=",")
+                    di_csv = pd.read_csv("DI.csv", sep=";", decimal=",")
                     di_df = pd.DataFrame(di_csv, columns=["Arquivo","Data","Taxa x 100"])
                     
                     #Isolando a coluna "Arquivo" para comparação
