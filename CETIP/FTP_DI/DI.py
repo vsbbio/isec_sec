@@ -88,7 +88,7 @@ def getvalue(txt_lst):
                 di = float(di[:9])
                 
                 #Armazenando temporariamente o resultado em uma lista composta de arquivo|data|taxa_di
-                di_lst_temp = [file, file[:-4], float(di/100)]
+                di_lst_temp = [file, str(file[:4])+"."+str(file[4:6])+"."+str(file[6:8]), float(di/100)]
                 
                 #Incluindo o arquivo temporária na listagem final
                 di_lst.append(di_lst_temp)
@@ -117,128 +117,71 @@ def getvalue(txt_lst):
     #Retornando o resultado do tratamento
     return di_lst
 
-#Dando opção de escolha ao usuário
-willp = int(input("Escolha uma opção:\n1.Gerar arquivo completo; \n2. Adicionar DI em planilha já existente. "))
-
-#Escolha 1
-if willp == 1:
-    print("Você escolheu gerar o arquivo completo!")
+#Verificando se há um arquivo na pasta para ser utilizado
+if os.path.isfile("DI.csv") == False:
     
-    #Função getAll.py - consolidação de todos os DI's disponíveis no FTP
-    def getall_di():
-        limit = 0
-        while limit <= 2:
-            try:
-                
-                """Executando GetTxt e GetValues. Extração dos nomes 
-                dos arquivos disponíveis no FTP. Extração do texto/conteúdo 
-                dos arquivos contidos no diretório"""
-                
-                di_lst = getvalue(gettxt())
+    """Executando GetTxt e GetValues. Extração dos nomes 
+    dos arquivos disponíveis no FTP. Extração do texto/conteúdo 
+    dos arquivos contidos no diretório"""
+            
+    di_lst = getvalue(gettxt())
                                 
-                #Convertendo a listagem em DataFrame
-                di_df = pd.DataFrame(di_lst, columns=["Arquivo", "Data", "Taxa x 100"])
+    #Convertendo a listagem em DataFrame
+    di_df = pd.DataFrame(di_lst, columns=["Arquivo", "Data", "Taxa x 100"])
                 
-                #Salvando o arquivo em CSV
-                di_df.to_csv(pathFILE+"\\DI"+snowflake+".csv", sep=";",index=False, doublequote=False, decimal=",")
-                print("\nArquivo salvo em %s, por favor verificar a correta alocação!" %(pathFILE))
-                break
-            
-            except HTTPError:
-                print("\nHTTPError, tentaremos de novo! %r \n %s" %(limit, regFunc(getall_di)))
-                sleep(10)
-                limit += 1
-                continue
-            
-            except URLError:
-                print("\nURLError, tentaremos de novo! %r \n %s" %(limit, regFunc(getall_di)))
-                sleep(10)
-                limit += 1
-                continue
+    #Salvando o arquivo em CSV
+    di_df.to_csv(pathFILE+"\\DI"+snowflake+".csv", sep=";",index=False, doublequote=False, decimal=",")
+    print("\nArquivo salvo em %s, por favor verificar a correta alocação!" %(pathFILE))
     
-    #Executando a função depois de carregada
-    getall_di()
-    
-#Escolha 2
-elif willp == 2:
-    print("Você escolheu adicionar novas taxas!")
-    
-    #Função append_DI.py - inclusão de novas taxa adicionadas ao diretório FTP
-    def append_di():
-        limit = 0
-        while limit <= 2:
-            try:
-                
-                #Verificando se há um arquivo na pasta para ser utilizado
-                if os.path.isfile("DI.csv") == False:
-                    print("\nArquivo DI.txt não encontrado na pasta executada!")
-                    break
-                
-                else:
-                    #Extraindo e os nomes dos arquivos disponíveis no FTP (Função gettxt())
-                    txt_lst = gettxt()
-                    
-                    #Abrindo e convertendo o arquivo DI.csv em Data Frame
-                    di_csv = pd.read_csv("DI.csv", sep=";", decimal=",")
-                    di_df = pd.DataFrame(di_csv, columns=["Arquivo","Data","Taxa x 100"])
-                    
-                    #Isolando a coluna "Arquivo" para comparação
-                    di_lst = list(di_csv["Arquivo"])
-                    
-                    
-                    #Criando listagem em de branco
-                    new_lst = []
-                    
-                #Criando a listagem dos arquivos novos
-                for file in txt_lst:
-                    if file in di_lst:
-                        new_temp = []
-                    else:
-                        new_temp = file
-                        new_lst.append(new_temp)
-                        
-                        #Criando uma barra de progresso
-                        if txt_lst.index(file) == 0:
-                            sys.stdout.write('\n')
-                            sys.stdout.write('\r')
-                            sys.stdout.write("Comparing Files [%-20s] %d%%" % ('='*int((txt_lst.index(file)+1)*40/len(txt_lst)), 2.5*int((txt_lst.index(file)+1)*40/len(txt_lst))))
-                        else:
-                            sys.stdout.write('\r')
-                            sys.stdout.write("Comparing Files [%-20s] %d%%" % ('='*int((txt_lst.index(file)+1)*40/len(txt_lst)), 2.5*int((txt_lst.index(file)+1)*40/len(txt_lst))))
-                    
-                 #Testando se há arquivos novos, se sim ELSE, se não IF (rsrs)       
-                if len(new_lst) == 0:
-                    print("\nNão há novas taxas!")
-                    break
-                
-                #Adicionando os arquivos novos à planilha já existente
-                else:
-                    #Executando função GetValue e convertendo em Data Frame
-                    val_df = pd.DataFrame(getvalue(new_lst), columns=["Arquivo","Data","Taxa x 100"])
-                    
-                    #Convertendo a Coluna "Taxa x 100" em numerico
-                    val_df["Taxa x 100"] = pd.to_numeric(val_df["Taxa x 100"])
-                    
-                    #Adicionando os novos valores e salvando o arquivo na pasta executada
-                    di_df.append(val_df, ignore_index=True).to_csv(pathFILE+"\\DI.csv", sep=";",index=False, doublequote=False, decimal=",")
-                    
-                    print("\n %r taxas adicionas" %(len(new_lst)))
-                    break
-                
-            except HTTPError:
-                print("\nHTTPError, tentaremos de novo! %r \n %s" %(limit, regFunc(append_di)))
-                sleep(10)
-                limit += 1
-                continue
-            except URLError:
-                print("\nURLError, tentaremos de novo! %r \n %s" %(limit, regFunc(append_di)))
-                sleep(10)
-                limit += 1
-                continue
-           
-    #Executando a função depois de carregada
-    append_di()
-    
-#Escolha Inválida
+
 else:
-    print("Opção inválida!")
+    #Extraindo e os nomes dos arquivos disponíveis no FTP (Função gettxt())
+    txt_lst = gettxt()
+            
+    #Abrindo e convertendo o arquivo DI.csv em Data Frame
+    di_csv = pd.read_csv("DI.csv", sep=";", decimal=",")
+    di_df = pd.DataFrame(di_csv, columns=["Arquivo","Data","Taxa x 100"])
+                    
+    #Isolando a coluna "Arquivo" para comparação
+    di_lst = list(di_csv["Arquivo"])
+                    
+                    
+    #Criando listagem em de branco
+    new_lst = []
+                    
+    #Criando a listagem dos arquivos novos
+    for file in txt_lst:
+        if file not in di_lst:
+        
+            new_temp = file
+            new_lst.append(new_temp)
+            
+        else:
+            pass
+        
+            #Criando uma barra de progresso
+            if txt_lst.index(file) == 0:
+                sys.stdout.write('\n')
+                sys.stdout.write('\r')
+                sys.stdout.write("Comparing Files [%-20s] %d%%" % ('='*int((txt_lst.index(file)+1)*40/len(txt_lst)), 2.5*int((txt_lst.index(file)+1)*40/len(txt_lst))))
+            else:
+                sys.stdout.write('\r')
+                sys.stdout.write("Comparing Files [%-20s] %d%%" % ('='*int((txt_lst.index(file)+1)*40/len(txt_lst)), 2.5*int((txt_lst.index(file)+1)*40/len(txt_lst))))
+        
+    #Testando se há arquivos novos, se sim ELSE, se não IF (rsrs)       
+    if len(new_lst) == 0:
+        print("\nNão há novas taxas!")
+        
+            
+    #Adicionando os arquivos novos à planilha já existente
+    else:
+        #Executando função GetValue e convertendo em Data Frame
+        val_df = pd.DataFrame(getvalue(new_lst), columns=["Arquivo","Data","Taxa x 100"])
+                
+        #Convertendo a Coluna "Taxa x 100" em numerico
+        val_df["Taxa x 100"] = pd.to_numeric(val_df["Taxa x 100"])
+                
+        #Adicionando os novos valores e salvando o arquivo na pasta executada
+        di_df.append(val_df, ignore_index=True).to_csv(pathFILE+"\\DI.csv", sep=";",index=False, doublequote=False, decimal=",")
+                
+        print("\n %r taxas adicionas" %(len(new_lst)))
