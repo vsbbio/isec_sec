@@ -38,18 +38,20 @@ def getGen():
     
             index_t = []
             y = 1995
-            month = {"JAN":1,"FEV":2,"MAR":3,"ABR":4,"MAI":5,"JUN":6,"JUL":7,"AGO":8,"SET":9,"OUT":10,"NOV":11,"DEZ":12,} 
+            j = 0
+            month = {"JAN":"01","FEV":"02","MAR":"03","ABR":"04","MAI":"05","JUN":"06","JUL":"07","AGO":"08","SET":"09","OUT":"10","NOV":"11","DEZ":"12",} 
     
             for item in lst_b:
                 if item in lst_m1:
-                    indext = [str(y) + "." + str(month[item]), str(lst_b[lst_b.index(item) + 1]).replace(" ","").replace("\n","")]
+                    indext = [str(y) + "." + month[item], str(lst_b[j+1]).replace(" ","").replace("\n","")]
                     index_t.append(indext)
                 elif item in lst_m2:
-                    indext = [str(y) + "." + str(month[item]), str(lst_b[lst_b.index(item) + 1]).replace(" ","").replace("\n", "")]
+                    indext = [str(y) + "." + str(month[item]), str(lst_b[j+1]).replace(" ","").replace("\n", "")]
                     index_t.append(indext)
                     y += 1
                 else:
                     pass
+                j += 1
 
             return index_t
             break
