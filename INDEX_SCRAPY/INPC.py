@@ -1,14 +1,14 @@
-import os
+
 import pandas as pd
+import sqlite3 as sq3
+
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 from time import sleep
 from bs4 import BeautifulSoup
+from os import getcwd
 
-#Definindo parâmetros do sistema
-pathFILE = os.getcwd()
-
-def getGen():
+def wsValue():
     limit = 0
     while limit <= 10:
         try:
@@ -38,14 +38,15 @@ def getGen():
             index_t = []
             y = 1995
             j = 0
-            month = {"JAN":"01","FEV":"02","MAR":"03","ABR":"04","MAI":"05","JUN":"06","JUL":"07","AGO":"08","SET":"09","OUT":"10","NOV":"11","DEZ":"12",} 
+            month = {"JAN":"01","FEV":"02","MAR":"03","ABR":"04","MAI":"05",\
+                     "JUN":"06","JUL":"07","AGO":"08","SET":"09","OUT":"10","NOV":"11","DEZ":"12",} 
     
             for item in lst_b:
                 if item in lst_m1:
-                    indext = [str(y) + "." + month[item], str(lst_b[j+1]).replace(" ","").replace("\n","")]
+                    indext = [int(str(y) + str(month[item])+"01"), str(lst_b[j+1]).replace(" ","").replace("\n","")]
                     index_t.append(indext)
                 elif item in lst_m2:
-                    indext = [str(y) + "." + str(month[item]), str(lst_b[j+1]).replace(" ","").replace("\n", "")]
+                    indext = [int(str(y) + str(month[item])+"01"), str(lst_b[j+1]).replace(" ","").replace("\n", "")]
                     index_t.append(indext)
                     y += 1
                 else:
@@ -66,23 +67,49 @@ def getGen():
             sleep(10)
             limit += 1
             continue
-        
-        
-df_new = pd.DataFrame(getGen(), columns=["Data", "NI"])
+            
+#Funções para lidar com os dados contidos no db sqlite3
+def criar(table_name="INPC"):
+    c1 = sq3.connect("INDEX.db")
+    c2 = c1.cursor()
 
-if os.path.isfile("INPC.csv") == False:
-    df_new.to_csv(pathFILE+"\\INPC.csv", sep=";",index=False, doublequote=False, decimal=",")
-    print("\nGerado arquivo completo com sucesso!")
+    sql_create = "CREATE TABLE IF NOT EXISTS %s(date datetime primary key, VAR INTEGER)" %(table_name)
+    c2.execute(sql_create)
 
-else:
-    df_old = pd.read_csv("INPC.csv", sep=";", decimal=",")
-    delta = len(df_new)-len(df_old)
-    if  delta > 0:
-        lst_temp = [[""]*2, [""]*2]
-        df_temp = pd.DataFrame(lst_temp*delta, columns=["Data", "NI"])
-        df_old = df_old.append(df_temp,ignore_index=True)
-        df_old.update(df_new)
-        df_old.to_csv(pathFILE+"\\INPC.csv", sep=";",index=False, doublequote=False, decimal=",")
-        print("Arquivo atualizado e salvo com sucesso! %r nova(s) taxa(s)!" %(delta))
-    else:
-        print("Não há novas taxas!")
+    c2.close()
+    c1.close()
+
+def inserir(table_name="INPC", data_insert="DATA"):
+    c1 = sq3.connect("INDEX.db")
+    c2 = c1.cursor()
+
+    sql_insert = "INSERT OR IGNORE INTO %s VALUES(?, ?)" %(table_name)
+
+    for item in data_insert:
+        c2.execute(sql_insert, item)
+
+    c1.commit()
+    c2.close()
+    c1.close()
+
+def export_csv(table_name="TABELA", select="*"):
+    c1 = sq3.connect("INDEX.db")
+    c2 = c1.cursor()
+    dates = []
+
+    sql_select = "SELECT %s FROM %s" %(select, table_name)
+
+    c2.execute(sql_select)
+
+    data = c2.fetchall()
+    data = pd.DataFrame(data, columns=["Date","VAR"])
+
+    data.to_csv(getcwd()+"\INPC.csv", sep=";",index=False, doublequote=False, decimal=".")
+
+criar(table_name="INPC")
+inserir(table_name="INPC", data_insert=wsValue())
+
+answer = input("Você deseja exportar o arquivo para CSV?")
+
+if answer.upper() == "SIM":
+    export_csv(table_name="INPC")
