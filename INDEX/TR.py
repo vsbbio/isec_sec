@@ -31,7 +31,7 @@ sql_create = "CREATE TABLE IF NOT EXISTS %s(date INTEGER primary key, VAR float)
 c2.execute(sql_create)
 
 for item in data:
-    sql_insert = "INSERT IGNORE INTO TR (date, VAR) VALUES(%d, %7.4f)" %(item[0], item[1])
+    sql_insert = "INSERT IGNORE INTO TR (date, VAR) VALUES(%d, %6.2f)" %(item[0], item[1])
     c2.execute(sql_insert)
     c1.commit()
 

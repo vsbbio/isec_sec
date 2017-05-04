@@ -111,7 +111,7 @@ if len(new) > 0:
     data = wsValue(new)
 
     for item in data:
-        sql_insert = "INSERT IGNORE INTO CDI (date, VAR) VALUES(%d, %7.4f)" %(item[0], item[1])
+        sql_insert = "INSERT IGNORE INTO CDI (date, VAR) VALUES(%d, %4.2f)" %(item[0], item[1])
         c2.execute(sql_insert)
         c1.commit()
 

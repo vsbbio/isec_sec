@@ -119,17 +119,17 @@ for indice in table_name:
     c2.execute(sql_create)
 
 for item in Igpdi:
-    sql_insert = "INSERT IGNORE INTO IGPDI (date, VAR) VALUES(%d, %7.4f)" %(item[0], item[1])
+    sql_insert = "INSERT IGNORE INTO IGPDI (date, VAR) VALUES(%d, %7.3f)" %(item[0], item[1])
     c2.execute(sql_insert)
     c1.commit()
 
 for item in Igpm:
-    sql_insert = "INSERT IGNORE INTO IGPM (date, VAR) VALUES(%d, %7.4f)" %(item[0], item[1])
+    sql_insert = "INSERT IGNORE INTO IGPM (date, VAR) VALUES(%d, %7.3f)" %(item[0], item[1])
     c2.execute(sql_insert)
     c1.commit()
 
 for item in Ipca:
-    sql_insert = "INSERT IGNORE INTO IPCA (date, VAR) VALUES(%d, %7.4f)" %(item[0], item[1])
+    sql_insert = "INSERT IGNORE INTO IPCA (date, VAR) VALUES(%d, %7.3f)" %(item[0], item[1])
     c2.execute(sql_insert)
     c1.commit()
 

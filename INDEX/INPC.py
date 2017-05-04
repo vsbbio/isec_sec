@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 
-INCCDI_URL = "http://indiceseconomicos.secovi.com.br/indicadormensal.php?idindicador=59"
-table_name = "INCCDI"
+INCCDI_URL = "http://indiceseconomicos.secovi.com.br/indicadormensal.php?idindicador=60"
+table_name = "INPC"
 limit = 0
 j = 0
 
@@ -74,7 +74,7 @@ sql_create = "CREATE TABLE IF NOT EXISTS %s(date INTEGER primary key, VAR float)
 c2.execute(sql_create)
 
 for item in index_t:
-    sql_insert = "INSERT IGNORE INTO INCCDI (date, VAR) VALUES(%d, %7.4f)" %(item[0], item[1])
+    sql_insert = "INSERT IGNORE INTO INPC (date, VAR) VALUES(%d, %7.3f)" %(item[0], item[1])
     c2.execute(sql_insert)
     c1.commit()
 
