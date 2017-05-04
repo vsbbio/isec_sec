@@ -1,0 +1,21 @@
+# IMPORTANT: Set this to false.
+demo: false
+
+# Theme customization is done on this file instead of _config.yml so that
+# you don't have to restart Jekyll to see changes.
+
+photo: "https://thumbs.dreamstime.com/t/blue-abstract-geometric-rumpled-triangular-background-low-poly-style-vector-illustration-63288494.jpg"
+name: "Vinícius Barbosa"
+copy: "Quant e Data Analyst formado em Economia pela PUC-SP com especialização em andamento em Ciência dos Dados. Possui diversos cursos na área de tecnologia na tentativa de se manter atualizado com o ferramental disponível para otimizar suas modelagens/predições financeiras."
+
+# Color scheme based on http://www.materialui.co/colors.
+# Possible values:
+# - default
+# - red
+# - pink
+# - brown
+# - blue
+# - purple
+# - teal
+# - green
+color: default
