@@ -20,7 +20,7 @@ if len(myDate) == 10 and myDateI[0] in range(1,32) and myDateI[1] in range(1,13)
             while j < 50:
 
                 try:
-                    dataTemp = pd.read_excel(pathFILE + "\\"+ i, converters={"VALOR_CONTA":int}, sheetname = j)
+                    dataTemp = pd.read_excel(pathFILE + "\\"+ i, converters={"VALOR_CONTA":int, "EMISSAO":str, "SERIE":str}, sheetname = j)
                     frames = [dataTemp, data]
                     data = pd.concat(frames)
                     j += 1
@@ -28,7 +28,6 @@ if len(myDate) == 10 and myDateI[0] in range(1,32) and myDateI[1] in range(1,13)
                 except:
                     print("Planilha {0} e sheet {1}".format(i, j))
                     j = 50
-
         else:
             pass
 
