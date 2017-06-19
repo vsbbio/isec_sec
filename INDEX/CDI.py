@@ -71,7 +71,7 @@ def wsValue(names):
 
             #Editando o conteúdo, excluindo espaços e outros caracteres
             value = float(value[:9])
-            data_temp = [int(file), float(value/100)]
+            data_temp = [int(file), float(value/10000)]
             data.append(data_temp)
         except:
             print("Erro link: %s" %(html))
