@@ -39,5 +39,7 @@ lim = len(data.codigo)
 while count <= lim:
     try:
         data.to_sql(con=engine, name='emissoes',if_exists='append', index=False,)
+        count += 1
     except:
+        count +=1
         continue
