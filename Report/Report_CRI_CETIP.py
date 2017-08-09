@@ -4,6 +4,10 @@ import pymysql
 import os
 from sqlalchemy import create_engine
 from selenium import webdriver
+from datetime import datetime
+
+x = datetime.now()
+x = str(x.day)+str(x.year)
 
 d = webdriver.Chrome(executable_path='C:\\ProgramData\\Anaconda3\\selenium\\webdriver\\chromedriver.exe')
 url = 'www.cetip.com.br/tituloscri'
@@ -29,17 +33,5 @@ data = pd.read_csv('C:\\Users\\vinicius\\Downloads\\data.csv', decimal=",",sep="
 
 os.remove("C:\\Users\\vinicius\\Downloads\\data.csv")
 
-data['dt_emissao'] = data['dt_emissao'].apply(pd.to_datetime, errors='coerce')
-data['dt_vencimento'] = data['dt_vencimento'].apply(pd.to_datetime, errors='coerce')
-data['dt_distribuição'] = data['dt_distribuição'].apply(pd.to_datetime, errors='coerce')
-
 engine = create_engine('mysql+pymysql://root:isec@3320@localhost/cetip')
-count = 0
-lim = len(data.codigo)
-while count <= lim:
-    try:
-        data.to_sql(con=engine, name='emissoes',if_exists='append', index=False,)
-        count += 1
-    except:
-        count +=1
-        continue
+data.to_sql(con=engine, name='emissoes{0}'.format(x),if_exists='append', index=False)
