@@ -334,49 +334,49 @@ for item in diset:
     sql_insert = "INSERT IGNORE INTO CDI (date, VAR) VALUES({:d}, {:.4f})".format(item[0],item[1])
     c2.execute(sql_insert)
     c1.commit()
-    print("CDI_insert [ ok ]")
+print("CDI_insert [ ok ]")
 
 #TR
 for item in trset:
     sql_insert = "INSERT IGNORE INTO TR (date, VAR) VALUES({:d}, {:6.2f})".format(item[0], item[1])
     c2.execute(sql_insert)
     c1.commit()
-    print("TR_insert [ ok ]")
+print("TR_insert [ ok ]")
 
 #INCCDI
 for item in inccdiset:
     sql_insert = "INSERT IGNORE INTO INCCDI (date, VAR) VALUES({:d}, {:7.3f})".format(item[0], item[1])
     c2.execute(sql_insert)
     c1.commit()
-    print("INCCDI_insert [ ok ]")
+print("INCCDI_insert [ ok ]")
 
 #INPC
 for item in inpcset:
     sql_insert = "INSERT IGNORE INTO INPC (date, VAR) VALUES({:d}, {:7.3f})".format(item[0], item[1])
     c2.execute(sql_insert)
     c1.commit()
-    print("INPC_insert [ ok ]")
+print("INPC_insert [ ok ]")
 
 #IGPDI
 for item in igpdiset:
     sql_insert = "INSERT IGNORE INTO IGPDI (date, VAR) VALUES({:d}, {:7.3f})".format(item[0], item[1])
     c2.execute(sql_insert)
     c1.commit()
-    print("IGPDI_insert [ ok ]")
+print("IGPDI_insert [ ok ]")
 
 #IGPM
 for item in igpmset:
     sql_insert = "INSERT IGNORE INTO IGPM (date, VAR) VALUES({:d}, {:7.3f})".format(item[0], item[1])
     c2.execute(sql_insert)
     c1.commit()
-    print("IGPM_insert [ ok ]")
+print("IGPM_insert [ ok ]")
 
 #IPCA
 for item in ipcaset:
     sql_insert = "INSERT IGNORE INTO IPCA (date, VAR) VALUES({:d}, {:7.3f})".format(item[0], item[1])
     c2.execute(sql_insert)
     c1.commit()
-    print("IPCA_insert [ ok ]")
+print("IPCA_insert [ ok ]")
 
 c2.close()
 c1.close()
