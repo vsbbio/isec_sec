@@ -1,2 +1,1 @@
-# resume
 ISEC BRASIL
